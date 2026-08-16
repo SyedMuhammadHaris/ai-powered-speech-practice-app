@@ -1,0 +1,131 @@
+.app {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 0;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  padding: 10px 16px;
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--accent-border);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input[type="text"] {
+  font: inherit;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-h);
+}
+
+.error {
+  color: #d33;
+  margin: 8px 0;
+}
+
+.difficulty-badge {
+  display: inline-block;
+  font-size: 13px;
+  text-transform: capitalize;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* Topic selector */
+.topic-selector .presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.topic-selector form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+/* Conversation view */
+.conversation-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.conversation-view header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.transcript {
+  flex: 1;
+  min-height: 240px;
+  max-height: 50vh;
+  overflow-y: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: left;
+}
+
+.turn {
+  margin: 0 0 12px;
+  line-height: 145%;
+}
+
+.turn.user strong {
+  color: var(--accent);
+}
+
+.status-bar {
+  text-align: center;
+  color: var(--text);
+  margin: 12px 0;
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.mic-button.recording {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+/* Feedback report */
+.feedback-report {
+  text-align: left;
+}
+
+.feedback-report h3 {
+  margin: 20px 0 8px;
+}
+
+.feedback-report button {
+  margin-top: 20px;
+}

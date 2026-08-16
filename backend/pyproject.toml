@@ -1,0 +1,25 @@
+[project]
+name = "speakpractice-backend"
+version = "0.1.0"
+description = "SpeakPractice backend: FastAPI + WebSockets, faster-whisper STT, Groq LLM, edge-tts TTS"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "fastapi==0.115.0",
+    "uvicorn[standard]==0.32.0",
+    "websockets==13.1",
+    "sqlalchemy==2.0.36",
+    "psycopg[binary]==3.2.3",
+    "pydantic==2.9.2",
+    "pydantic-settings==2.6.0",
+    "python-dotenv==1.0.1",
+    "httpx==0.27.2",
+    "faster-whisper==1.0.3",
+    "requests==2.32.3",
+    "edge-tts==7.2.8",
+    "torch==2.4.1",
+    "torchaudio==2.4.1",
+    "python-multipart==0.0.12",
+]
+
+[tool.uv]
+package = false
