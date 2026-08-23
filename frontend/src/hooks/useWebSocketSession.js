@@ -38,12 +38,21 @@ export function useWebSocketSession(sessionId) {
   useEffect(() => {
     if (!sessionId) return undefined;
 
+    let disposed = false;
     const ws = new WebSocket(`${WS_BASE_URL}/session/${sessionId}/talk`);
     wsRef.current = ws;
 
-    ws.onopen = () => setConnected(true);
-    ws.onclose = () => setConnected(false);
-    ws.onerror = () => setError("WebSocket connection error");
+    ws.onopen = () => {
+      if (disposed) return;
+      setConnected(true);
+      setError(null);
+    };
+    ws.onclose = () => {
+      if (!disposed) setConnected(false);
+    };
+    ws.onerror = () => {
+      if (!disposed) setError("WebSocket connection error");
+    };
 
     ws.onmessage = (event) => {
       if (typeof event.data === "string") {
@@ -61,8 +70,9 @@ export function useWebSocketSession(sessionId) {
     };
 
     return () => {
+      disposed = true;
       ws.close();
-      wsRef.current = null;
+      if (wsRef.current === ws) wsRef.current = null;
     };
   }, [sessionId, playNextAudio]);
 

@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:?Set DATABASE_URL to the production database connection string}
+      CORS_ORIGINS: ${CORS_ORIGINS:?Set CORS_ORIGINS to the public frontend URL}
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - whisper_models:/root/.cache/huggingface
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      target: production
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:?Set VITE_API_BASE_URL to the public backend URL}
+        VITE_WS_BASE_URL: ${VITE_WS_BASE_URL:?Set VITE_WS_BASE_URL to the public WebSocket backend URL}
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  whisper_models:
