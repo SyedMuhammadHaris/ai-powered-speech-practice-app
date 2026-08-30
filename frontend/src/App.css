@@ -117,6 +117,16 @@ input[type="text"] {
   background: var(--accent-bg);
 }
 
+.done-button {
+  border-color: var(--accent);
+  color: #fff;
+  background: var(--accent);
+}
+
+.done-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
 /* Feedback report */
 .feedback-report {
   text-align: left;

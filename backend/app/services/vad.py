@@ -37,7 +37,7 @@ async def speech_probability(samples: np.ndarray) -> float:
 class TurnDetector:
     """Tracks speech/silence across incoming audio chunks to detect end-of-turn."""
 
-    def __init__(self, silence_threshold_s: float = 0.7, speech_prob_threshold: float = 0.5):
+    def __init__(self, silence_threshold_s: float = 1.6, speech_prob_threshold: float = 0.5):
         self.silence_threshold_s = silence_threshold_s
         self.speech_prob_threshold = speech_prob_threshold
         self.silence_duration_s = 0.0

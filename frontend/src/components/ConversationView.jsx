@@ -13,7 +13,7 @@ const STATUS_LABEL = {
 };
 
 export default function ConversationView({ session, onEnd }) {
-  const { connected, messages, status, error, sendAudioChunk } = useWebSocketSession(session.session_id);
+  const { connected, messages, status, error, sendAudioChunk, endTurn } = useWebSocketSession(session.session_id);
   const { start, stop, isRecording, error: micError } = useMicRecorder(sendAudioChunk);
   const [ending, setEnding] = useState(false);
   const transcriptEndRef = useRef(null);
@@ -64,6 +64,13 @@ export default function ConversationView({ session, onEnd }) {
           onToggle={() => (isRecording ? stop() : start())}
           disabled={!connected || ending}
         />
+        <button
+          className="done-button"
+          onClick={endTurn}
+          disabled={!connected || ending || status !== "listening"}
+        >
+          I&apos;m done speaking
+        </button>
         <button onClick={handleEnd} disabled={ending}>
           {ending ? "Ending..." : "End Session"}
         </button>

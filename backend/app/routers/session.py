@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 
 import numpy as np
@@ -84,20 +85,34 @@ async def talk(websocket: WebSocket, session_id: str, db: DBSession = Depends(ge
             if message.get("type") == "websocket.disconnect":
                 break
 
-            chunk_bytes = message.get("bytes")
-            if not chunk_bytes:
-                continue
-
-            audio_buffer.extend(chunk_bytes)
-            pcm_leftover += chunk_bytes
-
             turn_ended = False
-            while len(pcm_leftover) >= WINDOW_BYTES:
-                window, pcm_leftover = pcm_leftover[:WINDOW_BYTES], pcm_leftover[WINDOW_BYTES:]
-                samples = _pcm16_bytes_to_float32(window)
-                if await detector.feed(samples):
-                    turn_ended = True
-                    break
+
+            chunk_bytes = message.get("bytes")
+            if chunk_bytes:
+                audio_buffer.extend(chunk_bytes)
+                pcm_leftover += chunk_bytes
+
+                while len(pcm_leftover) >= WINDOW_BYTES:
+                    window, pcm_leftover = pcm_leftover[:WINDOW_BYTES], pcm_leftover[WINDOW_BYTES:]
+                    samples = _pcm16_bytes_to_float32(window)
+                    if await detector.feed(samples):
+                        turn_ended = True
+                        break
+            else:
+                # Text frame: the student's "I'm done speaking" control message.
+                # Ends the turn immediately on whatever audio is buffered so far,
+                # instead of waiting for the VAD silence timeout (which can cut
+                # off a mid-sentence pause).
+                control_text = message.get("text")
+                if not control_text:
+                    continue
+                try:
+                    control = json.loads(control_text)
+                except ValueError:
+                    continue
+                if control.get("type") != "end_turn" or not audio_buffer:
+                    continue
+                turn_ended = True
 
             if not turn_ended:
                 continue

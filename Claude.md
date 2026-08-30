@@ -14,7 +14,7 @@ Primary goal: give the user maximum speaking time and natural back-and-forth, no
 - **STT**: faster-whisper (local, free) — `small` or `base` model
 - **LLM**: Groq API (cloud, requires `GROQ_API_KEY`) — `llama-3.3-70b-versatile` via Groq's OpenAI-compatible `/chat/completions` endpoint; conversation logic driven entirely by system prompt
 - **TTS**: edge-tts (free, no API key, natural voices, multiple English accents)
-- **VAD**: silero-vad — detect when user stops talking (no push-to-talk)
+- **VAD**: silero-vad — detects a long pause as a fallback end-of-turn signal; the student can also end their turn explicitly via an "I'm done speaking" button (`{"type": "end_turn"}` over the WebSocket), so a mid-sentence thinking pause doesn't get mistaken for the end of their turn
 - **DB**: PostgreSQL via SQLAlchemy (`psycopg` v3 driver) — used for local dev too since it's already installed
 - **Frontend**: React + Web Audio API / MediaRecorder, WebSocket client
 - **Auth**: keep minimal for v1 (single-user/local), can add later
@@ -78,7 +78,7 @@ Single-page app, no need for routing complexity in v1 — a few views/states is 
 
 **Views/States:**
 1. **Home / Start screen** — topic input (preset buttons + custom text field), "Start Session" button. Difficulty is shown (read-only, auto-computed) so the user knows what level they're on.
-2. **Conversation screen** — mic button (hold-to-talk or tap-to-toggle, your call), live transcript of both sides scrolling up, AI audio auto-plays when it arrives, simple "speaking..." / "listening..." status indicator.
+2. **Conversation screen** — mic button (hold-to-talk or tap-to-toggle, your call), live transcript of both sides scrolling up, AI audio auto-plays when it arrives, simple "speaking..." / "listening..." status indicator, and an "I'm done speaking" button (enabled while listening) so the student controls when their turn ends instead of relying solely on the VAD silence timeout.
 3. **Feedback screen** — shown after "End Session": summary text, list of mistakes, vocabulary suggestions, "Start New Session" button.
 
 **Key frontend responsibilities:**
@@ -107,7 +107,7 @@ Keep it plain React (Vite for dev server — fast, free, minimal config) — no 
 ## Key Endpoints (planned)
 
 - `POST /session/start` — body: `{topic}` (difficulty auto-computed from `program_start_date`, optional `override_difficulty` param) → creates session, returns session_id + difficulty used + AI's opening line (+ opening audio)
-- `WS /session/{id}/talk` — bidirectional: client streams audio in, server streams transcript + AI audio reply out
+- `WS /session/{id}/talk` — bidirectional: client streams audio in, server streams transcript + AI audio reply out. Client may also send a text control frame `{"type": "end_turn"}` to end its turn immediately (on whatever audio is buffered) instead of waiting for the VAD silence timeout.
 - `POST /session/{id}/end` — closes session, triggers feedback generation
 - `GET /session/{id}/feedback` — returns feedback report
 

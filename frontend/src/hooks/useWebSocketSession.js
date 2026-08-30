@@ -83,5 +83,14 @@ export function useWebSocketSession(sessionId) {
     }
   }, []);
 
-  return { connected, messages, status, error, sendAudioChunk };
+  // Lets the student end their turn on demand (e.g. after a mid-sentence
+  // pause) instead of waiting for the VAD silence timeout to decide for them.
+  const endTurn = useCallback(() => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify({ type: "end_turn" }));
+      setStatus("thinking");
+    }
+  }, []);
+
+  return { connected, messages, status, error, sendAudioChunk, endTurn };
 }
