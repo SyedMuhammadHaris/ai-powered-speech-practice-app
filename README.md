@@ -4,9 +4,17 @@ AI-powered English speaking practice app. See [Claude.md](Claude.md) for the ful
 
 ## Screenshots
 
-| Home | Conversation | Feedback |
-| --- | --- | --- |
-| ![Topic selection screen](project-screenshot/home.png) | ![Live conversation with the tutor](project-screenshot/conversation.png) | ![Session feedback report](project-screenshot/feedback.png) |
+**Home** — pick a topic; difficulty is auto-computed from your progress.
+
+![Topic selection screen](project-screenshot/home.png)
+
+**Conversation** — live transcript, with manual turn control ("I'm done speaking") alongside auto-detected pauses.
+
+![Live conversation with the tutor](project-screenshot/conversation.png)
+
+**Feedback** — mistakes and vocabulary suggestions generated after the session ends.
+
+![Session feedback report](project-screenshot/feedback.png)
 
 ## Run frontend and backend locally with Docker
 
