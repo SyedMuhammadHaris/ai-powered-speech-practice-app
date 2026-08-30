@@ -2,6 +2,12 @@
 
 AI-powered English speaking practice app. See [Claude.md](Claude.md) for the full spec.
 
+## Screenshots
+
+| Home | Conversation | Feedback |
+| --- | --- | --- |
+| ![Topic selection screen](project-screenshot/home.png) | ![Live conversation with the tutor](project-screenshot/conversation.png) | ![Session feedback report](project-screenshot/feedback.png) |
+
 ## Run frontend and backend locally with Docker
 
 Docker Compose starts the frontend and backend containers, and the backend uses
